@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/css/splide.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
+
+<script>
+jQuery(document).ready(function() {
+  setTimeout(function() {
+       jQuery( ".flex-control-nav" ).wrapInner( "<div class='splide__track'><div class='splide__list'></div></div>");
+     jQuery('.flex-control-nav li').addClass('splide__slide');
+    var splide = new Splide( '.flex-control-nav ', {
+  perPage: 4,
+    pagination: false,
+    gap:'10px',
+  perMove: 1,
+      focus  : 'center',
+
+} );
+
+splide.mount();
+  }, 1000);
+
+  
+});
+</script>
