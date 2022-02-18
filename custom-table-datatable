@@ -1,0 +1,59 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+<table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Judul Regulasi</th>
+                <th>Tahun</th>
+                <th>Kategori</th>
+            </tr>
+        </thead>
+        <tbody>
+               <?php 
+$the_query = new WP_Query( array('post_type' => 'regulasi') ); ?>
+<?php if ( $the_query->have_posts() ) : ?>
+    <?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
+                      <tr>
+                        <td></td>
+        <td>
+          <a href="<?php if( get_field('file') ): ?><?php the_field('file'); ?><?php endif; ?>" target="_blank"><?php the_title(); ?></a>
+          
+          </td>
+                        
+        <td><?php if( get_field('tahun') ): ?><?php the_field('tahun'); ?><?php endif; ?>
+</td>
+
+<?php foreach ( get_the_terms( get_the_ID(), 'kategori_regulasi' ) as $tax ) {
+    echo '<td>' . __( $tax->name ) . '</td>';
+} 
+?>
+                        </tr>
+    <?php endwhile; ?>
+    <?php wp_reset_postdata(); ?>
+<?php else : ?>
+    <p><?php _e( 'Sorry, no posts matched your criteria.' ); ?></p>
+<?php endif; ?>
+
+  </tbody>
+</table>
+
+<script>
+  jQuery(document).ready(function() {
+    var t = jQuery('#example').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+} );
+</script>
