@@ -1,0 +1,35 @@
+function my_form_save_to_cpt( $form ) {
+    $fields = $form->get_fields();
+    $name = $fields['form-field-dfb5d8'];
+    $email = $fields['form-field-9eb6e4'];
+    $messages = $fields['form-field-855616'];
+    $gender = $fields['form-field-dtcxic'];
+
+    $new_post = array();
+    $new_post['post_type'] = 'contact_form';
+    $new_post['post_status'] = 'publish';
+    if(isset($name) && !empty($name)){
+        $new_post['post_title'] = 'Message from '.$name.'';
+    } else {
+        $new_post['post_title'] = 'Message from user';
+    }
+     if(isset($messages)){
+        $new_post['post_content'] = $messages;
+    } else {
+        $new_post['post_content'] = 'No Message was submitted';
+    }
+    if(isset($email) && !empty($email)){
+        $new_post['meta_input']['email'] = $email;
+    }
+     if(isset($name) && !empty($name)){
+        $new_post['meta_input']['name'] = $name;
+    }
+    if(isset($gender) && !empty($gender)){
+        $new_post['meta_input']['gender'] = $gender;
+    }
+    if($post_id = wp_insert_post($new_post)){
+    } else {
+    }
+    return;
+}
+add_action( 'bricks/form/custom_action', 'my_form_save_to_cpt', 10, 1 );
