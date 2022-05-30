@@ -1,0 +1,15 @@
+function count_term_use () {
+ $term_id = \Bricks\Query::get_loop_object_id();
+$my_posts = get_posts(array(
+  'post_type' => 'post', //post type
+  'numberposts' => -1,
+  'tax_query' => array(
+    array(
+      'taxonomy' => 'category', //taxonomy name
+      'field' => 'id', //field to get
+      'terms' => $term_id, //term id
+    )
+  )
+));
+   return $count = count($my_posts);
+}
