@@ -1,0 +1,27 @@
+//JS//
+
+<script>
+jQuery(document).ready(function(){
+    jQuery('.open-icon').on('click', function(){
+        jQuery('.menu-mobile-container').addClass('open-menu-mobile');
+    });
+jQuery('.close-icon').on('click', function(){
+        jQuery('.menu-mobile-container').removeClass('open-menu-mobile');
+    });
+});
+</script>
+
+//CSS//
+#brxe-udqmmt.menu-mobile-container.open-menu-mobile {
+top:0;
+}
+#brxe-udqmmt.menu-mobile-container.open-menu-mobile  .open-icon{
+display:none;
+}
+#brxe-udqmmt.menu-mobile-container.open-menu-mobile .close-icon{
+display:block;
+top: 10px;
+}
+
+//Video Link//
+https://www.youtube.com/watch?v=xVxJeknL8kU
