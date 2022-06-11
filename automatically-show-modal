@@ -16,5 +16,8 @@ modal.style.display = "none";  }
 });
 </script>
 
+//Button Attribute//
+onclick="document.getElementById('brxe-klswsq').style.display='none'"
+
 //Tutorial//
 https://youtu.be/WcM4FwJ8BNE
