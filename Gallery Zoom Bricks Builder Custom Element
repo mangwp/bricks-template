@@ -1,0 +1,165 @@
+//Files;
+https://github.com/codrops/GridZoom/blob/main/dist/index.e9a2d1b4.js
+https://github.com/codrops/GridZoom/blob/main/dist/index.01b4f97a.css
+
+//Function File (Theme Child)
+add_action('wp_enqueue_scripts', function () {
+ 	wp_register_style( 'gallery-zoom', get_stylesheet_directory_uri() . '/assets/css/galleryzoom.css', false, '1.0', 'all' );
+	wp_register_script( 'gallery-zoom', get_stylesheet_directory_uri() . '/assets/js/galleryzoom.js', true, '1.0', 'all' );
+	  if ( function_exists( 'bricks_is_builder_iframe' ) && bricks_is_builder_iframe() ) {
+
+	wp_enqueue_style( 'gallery-zoom' );
+	wp_enqueue_script( 'gallery-zoom' );
+	  }
+});
+
+add_filter( 'body_class', 'add_body_class');
+function add_body_class( $classes ) {
+     if ( is_page(543) )
+          $classes[] = 'loading';
+ 
+     return $classes; 
+}
+
+add_action( 'init', function() {
+  $element_files = [
+	__DIR__ . '/elements/gallery-zoom.php',
+  ];
+  
+add_filter( 'bricks/builder/i18n', function( $i18n ) {
+  // For element category 'custom'
+  $i18n['myaddon'] = esc_html__( 'My Addon', 'bricks' );
+
+  return $i18n;
+} );
+
+// Element File
+<?php 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+class Gallery_Zoom extends \Bricks\Element {
+
+  /** 
+   * How to create your own elements
+   * 
+   * https://docs.bricksbuilder.io/article/38-create-your-own-elements
+   */
+
+  public $category     = 'myaddon';
+  public $name         = 'gallery-zoom';
+  public $icon         = 'fas fa-anchor'; // FontAwesome 5 icon in builder (https://fontawesome.com/icons)
+  public $css_selector = '.gallery-zoom-wrapper'; // Default CSS selector for all controls with 'css' properties
+  public $scripts      = ['galleryzoom']; // Enqueue registered scripts
+
+  public function get_label() {
+    return esc_html__( 'Gallery Zoom', 'bricks' );
+  }
+
+  // Set builder control groups
+  public function set_control_groups() {
+
+  }
+  public function enqueue_scripts()
+  {
+		wp_enqueue_script( 'gallery-zoom' );
+		wp_enqueue_style( 'gallery-zoom' );
+  }
+  // Set builder controls
+  public function set_controls() {
+    $this->controls['exampleRepeater'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Repeater', 'bricks' ),
+      'type' => 'repeater',
+      'titleProperty' => 'title', // Default 'title'
+      'default' => [
+        [
+          'number' => '01',
+          'title' => 'Here goes the description for repeater item.',
+          'description' => 'Here goes the description for repeater item.',
+        ],
+      ],
+      'placeholder' => esc_html__( 'Title placeholder', 'bricks' ),
+      'fields' => [
+        'number' => [
+          'label' => esc_html__( 'Number', 'bricks' ),
+          'type' => 'text',
+        ],
+        'title' => [
+          'title' => esc_html__( 'Title', 'bricks' ),
+          'type' => 'text',
+        ],
+        'description' => [
+            'title' => esc_html__( 'Description', 'bricks' ),
+            'type' => 'textarea',
+          ],
+          'image' => [
+            'title' => esc_html__( 'Image', 'bricks' ),
+            'type' => 'image',
+          ],
+      ],
+    ];
+  }
+
+  // Render element HTML
+  public function render() {
+    $root_classes[] = 'prefix-test-wrapper';
+    $this->set_attribute( '_root', 'class', $root_classes );
+    $items = $this->settings['exampleRepeater'];
+    echo "<div {$this->render_attributes( '_root' )}>"; // Element root attributes
+    if ( count( $items ) ) {
+        echo '<div class="grid grid--large">';
+      foreach ( $items as $item ) {
+        $imagurl = wp_get_attachment_image_url(
+            $item['image']['id'],
+            $item['image']['size'],
+            false,
+            [] // Image attributes
+        );
+        echo '<div class="grid__cell"> <div class="grid__cell-img"> <div class="grid__cell-img-inner" style="background-image:url('.$imagurl.')" data-item="item-1"></div> </div> </div>';
+
+      }
+      echo '</div>';
+      echo '<div class="content">';
+      $counts = 0 ;
+
+      foreach ( $items as $item ) {
+        $imagurl = wp_get_attachment_image_url(
+            $item['image']['id'],
+            $item['image']['size'],
+            false,
+            [] // Image attributes
+        );
+        echo '<div class="content__item" id="item-'.$counts.'">';
+        echo '<span class="content__item-number oh"><span class="oh__inner">' . $item['number'] . '</span></span>';
+        echo '<h2 class="content__item-heading oh"><span class="oh__inner">' . $item['title'] . '</span></h2>';
+        echo '<p class="content__item-text">' . $item['description'] . '</p>';
+        echo '<a class="content__item-link oh"><span class="oh__inner">View more</span></a>';
+        echo '<nav class="slide-nav">
+        <div class="slide-nav__img slide-nav__img--prev" style="background-image:url('.$imagurl.');">
+        </div>
+        <div class="slide-nav__img slide-nav__img--next" style="background-image:url('.$imagurl.');">
+        </div>
+    </nav>';
+        echo '</div>';
+        $counts++;
+
+      }
+      echo '<button class="back"> <svg viewBox="0 0 50 9"><path d="m0 4.5 5-3m-5 3 5 3m45-3h-77"></path></svg> </button>';
+      echo '<nav class="grid grid--mini">';
+      foreach ( $items as $item ) {
+        $imagurl = wp_get_attachment_image_url(
+            $item['image']['id'],
+            $item['image']['size'],
+            false,
+            [] // Image attributes
+        );
+        echo '<div class="grid__cell"> <div class="grid__cell-img"> <div class="grid__cell-img-inner" style="background-image:url('.$imagurl.')"></div> </div> </div>';
+      }
+      echo '</nav>';
+      echo '</div>';
+    } else {
+      esc_html_e( 'No items defined.', 'bricks' );
+    }
+    echo '</div>';
+  }
+}
