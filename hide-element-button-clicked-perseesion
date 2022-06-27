@@ -1,0 +1,15 @@
+<script>
+const closenotice = document.getElementById("brxe-cmkvfx").addEventListener('click',someEventHander);
+function someEventHander() {
+ sessionStorage.setItem("storys", "true");
+	 document.getElementById('brxe-zrrire').style.display = "none";
+  
+}
+document.addEventListener("DOMContentLoaded", function() {
+
+  if (sessionStorage.getItem("storys") == 'true') {
+	 document.getElementById('brxe-zrrire').style.display = "none";
+}
+});
+</script>
+
