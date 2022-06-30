@@ -1,0 +1,310 @@
+// Element file
+<?php
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+class Live_search_Form extends \Bricks\Element
+{
+
+    /** 
+     * How to create your own elements
+     * 
+     * https://docs.bricksbuilder.io/article/38-create-your-own-elements
+     */
+
+    public $category     = 'custom-elements';
+    public $name         = 'live-search';
+    public $icon         = 'ti-search'; // FontAwesome 5 icon in builder (https://fontawesome.com/icons)
+    public $css_selector = '.live-search-form'; // Default CSS selector for all controls with 'css' properties
+    // public $scripts      = []; // Enqueue registered scripts
+
+    public function get_label()
+    {
+        return esc_html__('Live Search Form', 'bricks');
+    }
+    public function enqueue_scripts() {
+        wp_enqueue_style( 'live-search-form' );
+    }
+
+    // Set builder controls
+    public function set_controls()
+    {
+
+        // Input
+
+        $this->controls['inputSeparator'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Field', 'bricks'),
+            'type'     => 'separator',
+        ];
+
+        $this->controls['inputHeight'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Height', 'bricks'),
+            'type'     => 'number',
+            'units'    => true,
+            'small'    => false,
+            'css'      => [
+                [
+                    'property' => 'height',
+                    'selector' => 'input[type=search]',
+                ],
+            ],
+        ];
+
+        $this->controls['inputWidth'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Width', 'bricks'),
+            'type'     => 'number',
+            'units'    => true,
+            'small'    => false,
+            'css'      => [
+                [
+                    'property' => 'width',
+                    'selector' => 'input[type=search]',
+                ],
+            ],
+        ];
+
+        $this->controls['placeholder'] = [
+            'tab'         => 'content',
+            'label'       => esc_html__('Placeholder', 'bricks'),
+            'type'        => 'text',
+            'inline'      => true,
+            'placeholder' => esc_html__('Search ...', 'bricks'),
+        ];
+
+        $this->controls['placeholderColor'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Placeholder color', 'bricks'),
+            'type'     => 'color',
+            'css'      => [
+                [
+                    'property' => 'color',
+                    'selector' => 'input[type=search]::placeholder',
+                ],
+            ],
+        ];
+
+        $this->controls['inputBackgroundColor'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Background color', 'bricks'),
+            'type'     => 'color',
+            'css'      => [
+                [
+                    'property' => 'background-color',
+                    'selector' => 'input[type=search]',
+                ],
+            ],
+        ];
+
+        $this->controls['inputBorder'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Border', 'bricks'),
+            'type'     => 'border',
+            'css'      => [
+                [
+                    'property' => 'border',
+                    'selector' => 'input[type=search]',
+                ],
+            ],
+        ];
+
+        $this->controls['inputBoxShadow'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Box shadow', 'bricks'),
+            'type'     => 'box-shadow',
+            'css'      => [
+                [
+                    'property' => 'box-shadow',
+                    'selector' => 'input[type=search]',
+                ],
+            ],
+        ];
+
+        // Icon
+
+        $this->controls['iconSeparator'] = [
+            'tab'   => 'content',
+            'label' => esc_html__('Icon', 'bricks'),
+            'type'  => 'separator',
+        ];
+
+        $this->controls['icon'] = [
+            'tab'   => 'content',
+            'label' => esc_html__('Icon', 'bricks'),
+            'type'  => 'icon',
+            'info'  => esc_html__('Click on search icon opens search overlay.', 'bricks'),
+        ];
+
+        $this->controls['iconBackgroundColor'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Icon background', 'bricks'),
+            'type'     => 'color',
+            'css'      => [
+                [
+                    'property' => 'background-color',
+                    'selector' => '.bricks-search-icon',
+                ],
+            ],
+            'required' => ['icon', '!=', ''],
+        ];
+
+        $this->controls['iconTypography'] = [
+            'tab'      => 'content',
+            'label'    => esc_html__('Icon typography', 'bricks'),
+            'type'     => 'typography',
+            'css'      => [
+                [
+                    'property' => 'font',
+                    'selector' => '.bricks-search-icon',
+                ],
+            ],
+            'exclude'  => [
+                'font-family',
+                'font-weight',
+                'font-style',
+                'text-align',
+                'text-decoration',
+                'text-transform',
+                'letter-spacing',
+            ],
+        ];
+
+        $this->controls['iconWidth'] = [
+            'tab'         => 'content',
+            'label'       => esc_html__('Icon width', 'bricks'),
+            'type'        => 'number',
+            'units'       => true,
+            'small'       => false,
+            'css'         => [
+                [
+                    'property' => 'width',
+                    'selector' => '.bricks-search-submit',
+                ],
+                [
+                    'property' => 'width',
+                    'selector' => '.bricks-search-icon',
+                ],
+            ],
+            'placeholder' => 60,
+        ];
+
+        $this->controls['iconHeight'] = [
+            'tab'         => 'content',
+            'label'       => esc_html__('Icon height', 'bricks'),
+            'type'        => 'number',
+            'units'       => true,
+            'small'       => false,
+            'css'         => [
+                [
+                    'property' => 'height',
+                    'selector' => '.bricks-search-icon',
+                ],
+            ],
+            'placeholder' => 40,
+            'required'    => ['icon', '!=', ''],
+        ];
+    }
+
+
+    public function render()
+    {
+        $settings = $this->settings;
+
+        $icon         = isset($settings['icon']) ? self::render_icon($settings['icon']) : false;
+
+        echo "<div {$this->render_attributes('_root')}>";
+
+            $search_text = isset($settings['placeholder']) ? $settings['placeholder'] : esc_html__('Search ...', 'bricks');
+            $icon        = isset($settings['icon']) ? Bricks\Element::render_icon($settings['icon'], ['overlay-trigger']) : false;
+            ?>
+            <form role="search" method="get" class="bricks-search-form" action="<?php echo esc_url(home_url('/')); ?>">
+                <label class="screen-reader-text"><span><?php esc_html_e('Search ...', 'bricks'); ?></span></label>
+                <input type="search" placeholder="<?php esc_attr_e($search_text); ?>" value="<?php echo get_search_query(); ?>" name="s" id="keyword" onkeyup="fetch()" />
+
+                <?php if ($icon) { ?>
+                    <div class="bricks-search-submit">
+                        <input type="submit" value="" autocomplete="off">
+                        <div class="bricks-search-icon"><?php echo $icon; ?></div>
+                    </div>
+                <?php } ?>
+
+                <button type="submit" class="screen-reader-text search-submit"><span><?php esc_html_e('Search', 'bricks'); ?></span></button>
+            </form>
+            <div class="search_result" id="datafetch" style="display: none;">
+                <ul>
+                    <li>Please wait..</li>
+                </ul>
+            </div>
+<?php
+            echo "</div>";
+
+        }
+    }
+
+// Functions file
+
+<?php
+add_action( 'wp_footer', 'ajax_fetch' );
+function ajax_fetch() {
+?>
+<script type="text/javascript">
+function fetch(){
+
+    jQuery.ajax({
+        url: '<?php echo admin_url('admin-ajax.php'); ?>',
+        type: 'post',
+        data: { action: 'data_fetch', keyword: jQuery('#keyword').val() },
+        success: function(data) {
+            jQuery('#datafetch').html( data );
+        }
+    });
+
+}
+jQuery("input#keyword").keyup(function() {
+      if (jQuery(this).val().length > 2) {
+        jQuery("#datafetch").show();
+      } else {
+        jQuery("#datafetch").hide();
+      }
+    });
+</script>
+
+<?php
+}
+// the ajax function
+add_action('wp_ajax_data_fetch' , 'data_fetch');
+add_action('wp_ajax_nopriv_data_fetch','data_fetch');
+function data_fetch(){
+
+    $the_query = new WP_Query( array( 'posts_per_page' => -1, 's' => esc_attr( $_POST['keyword'] ), 'post_type' => array('post') ) );
+    if( $the_query->have_posts() ) :
+        echo '<ul>';
+        while( $the_query->have_posts() ): $the_query->the_post(); ?>
+
+            <li><?php the_post_thumbnail('thumbnail')?> <a href="<?php echo esc_url( post_permalink() ); ?>"><?php the_title();?></a></li>
+
+        <?php endwhile;
+       echo '</ul>';
+        wp_reset_postdata();  
+    endif;
+
+    die();
+}
+
+
+//CSS
+.search_result{position:absolute;border:1px solid #dddd;background:#fff;width:100%;transition:all 2s ease 0s;z-index: 1;}
+.search_result ul {
+    padding: 0;
+    list-style: none;
+}
+.search_result ul li {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.search_result ul li img{
+    max-width: 40px;
+}
