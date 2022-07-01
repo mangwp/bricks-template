@@ -1,0 +1,101 @@
+//Element
+
+<?php
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+class Polylang_Switcher extends \Bricks\Element
+{
+
+    /** 
+     * How to create your own elements
+     * 
+     * https://docs.bricksbuilder.io/article/38-create-your-own-elements
+     */
+
+    public $category     = 'custom-elements';
+    public $name         = 'polylang-switcher';
+    public $icon         = 'ti-search'; // FontAwesome 5 icon in builder (https://fontawesome.com/icons)
+    public $css_selector = '.polylang-switcher'; // Default CSS selector for all controls with 'css' properties
+    // public $scripts      = []; // Enqueue registered scripts
+
+    public function get_label()
+    {
+        return esc_html__('Polylang Switcher', 'bricks');
+    }
+    public function enqueue_scripts() {
+        wp_enqueue_style( 'polylang-switcher' );
+
+    }
+
+    // Set builder controls
+    public function set_controls()
+    {
+
+        $this->controls['langoption'] = [
+            'tab' => 'content',
+            'label' => esc_html__( 'Type', 'bricks' ),
+            'type' => 'select',
+            'options' => [
+              'inline' => 'Inline',
+              'dropdown' => 'Dropdown',
+            ],
+            'inline' => true,
+            'placeholder' => esc_html__( 'Select Type', 'bricks' ),
+            'default' => 'inline',
+          ];
+          $this->controls['langname'] = [
+            'tab' => 'content',
+            'label' => esc_html__( 'Show Language Name', 'bricks' ),
+            'type' => 'checkbox',
+            'inline' => true,
+            'small' => true,
+            'default' => true, // Default: false
+          ];
+          $this->controls['langflag'] = [
+            'tab' => 'content',
+            'label' => esc_html__( 'Show Language Flag', 'bricks' ),
+            'type' => 'checkbox',
+            'inline' => true,
+            'small' => true,
+            'default' => true, // Default: false
+          ];
+    }
+
+
+    public function render()
+    {
+        $settings = $this->settings;
+		$display_type  = isset( $settings['langoption'] ) ? $settings['langoption'] : 'inline';
+        if ( isset( $this->settings['langname'] ) ) {
+            $langname = 1;
+          } else { 
+            $langname = 0;
+          };
+          if ( isset( $this->settings['langflag'] ) ) {
+            $langflag = 1;
+          } else { 
+            $langflag = 0;
+          };
+        echo "<div {$this->render_attributes('_root')}>";
+        if ( $display_type === 'inline' ) {
+			// Use include to pass $settings
+			echo "<ul>";
+pll_the_languages( array( 'show_flags' => $langflag,'show_names' => $langname ) );
+echo "</ul>";
+		} else {
+            echo "<ul>";
+            pll_the_languages( array( 'dropdown' => 1, 'show_flags' => $langflag,'show_names' => $langname ) );
+echo "</ul>";
+        }
+          
+        echo "</div>";
+
+        }
+    }
+
+
+// CSS
+
+.brxe-polylang-switcher ul {
+    list-style: none;
+}
