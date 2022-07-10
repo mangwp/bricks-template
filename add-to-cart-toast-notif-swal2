@@ -1,0 +1,73 @@
+//CSS//
+.swal2-popup .swal2-image {
+    margin: 0!important;
+}
+//Function//
+
+// Add some product data to "add to cart" button for 'added_to_cart' js event
+add_action('woocommerce_loop_add_to_cart_link', 'filter_wc_loop_add_to_cart_link', 10, 3);
+function filter_wc_loop_add_to_cart_link($button_html, $product, $args)
+{
+  if ($product->supports('ajax_add_to_cart')) {
+    $search_string  = 'data-product_sku';
+
+    // Insert custom product data as data tags
+    $replace_string = sprintf(
+      'data-product_name="%s" data-product_price="%s" data-currency="%s" %s',
+      $product->get_name(), // product name
+      wc_get_price_to_display($product), // Displayed price
+      get_woocommerce_currency(), // currency
+      $search_string
+    );
+
+    $button_html = str_replace($search_string, $replace_string, $button_html);
+  }
+  return $button_html;
+}
+
+// The jQuery code that will handle the event getting the required  product data
+add_action('wp_footer', 'added_to_cart_js_event');
+function added_to_cart_js_event()
+{
+?>
+  <script src="https://unpkg.com/sweetalert2@7.20.1/dist/sweetalert2.all.js"></script>
+  <script type="text/javascript">
+    (function($) {
+      $(document).on('click', '.ajax_add_to_cart', function() {
+        const toast = swal.mixin({
+          toast: true,
+          showConfirmButton: false,
+          timer: 10000
+        });
+        toast({
+          title: 'Adding Product to Cart',
+          imageUrl: 'https://brickselement.local/wp-content/uploads/2022/07/Rolling-1s-200px-1.svg',
+  imageWidth: 50,
+  imageHeight: 50,
+        });
+      });
+      $(document.body).on('added_to_cart', function(event, fragments, cart_hash, button) {
+        var product_id = button.data('product_id'), // Get the product id
+          product_qty = button.data('quantity'), // Get the quantity
+          product_sku = button.data('product_sku'), // Get the product sku
+          product_name = button.data('product_name'), // Get the product name
+          product_price = button.data('product_price'), // Get the product price
+          currency = button.data('currency'); // Get the currency
+
+        // For testing: View all product available data on console log (to be removed)
+        console.log(button.data());
+
+        const toast = swal.mixin({
+          toast: true,
+          showConfirmButton: false,
+          timer: 10000
+        });
+        toast({
+          type: 'success',
+          title: 'Product "' + product_name + '" added to Cart'
+        });
+      });
+    })(jQuery);
+  </script>
+<?php
+}
