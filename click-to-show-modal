@@ -1,0 +1,8 @@
+jQuery(document).ready(function(){
+    jQuery('#brxe-dendqc').on('click', function(){
+        jQuery('#brxe-hqhegf').addClass('open-modal');
+    });
+jQuery('#brxe-axxfey').on('click', function(){
+        jQuery('#brxe-hqhegf').removeClass('open-modal');
+    });
+});
