@@ -25,3 +25,19 @@ function wpb_track_post_views ($post_id) {
 add_action( 'wp_head', 'wpb_track_post_views');
 add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
+
+// Show post tags with link and a custom separator// use {echo:wpdocs_show_tags}
+
+function wpdocs_show_tags() {
+    $post_tags = get_the_tags();
+    $separator = ' | ';
+    $output = '';
+ 
+    if ( ! empty( $post_tags ) ) {
+        foreach ( $post_tags as $tag ) {
+            $output .= '<a href="' . esc_attr( get_tag_link( $tag->term_id ) ) . '">' . __( $tag->name ) . '</a>' . $separator;
+        }
+    }
+ 
+    return trim( $output, $separator );
+}
