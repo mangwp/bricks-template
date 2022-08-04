@@ -79,3 +79,31 @@ function acf_read_only_field($field)
 
 add_filter('acf/load_field/name=view_count', 'acf_read_only_field');
 
+//Display Most Used Tag in Last 7 Days//
+function most_use_tags()
+{
+  global $wpdb;
+$term_ids = $wpdb->get_col("
+    SELECT term_id FROM $wpdb->term_taxonomy
+    INNER JOIN $wpdb->term_relationships ON $wpdb->term_taxonomy.term_taxonomy_id=$wpdb->term_relationships.term_taxonomy_id
+    INNER JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->term_relationships.object_id
+    WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= $wpdb->posts.post_date");
+
+if(count($term_ids) > 0){
+
+  $tags = get_tags(array(
+    'orderby' => 'count',
+    'order'   => 'DESC',
+    'number'  => 7,
+    'include' => $term_ids,
+  ));
+  $output .= '<ul>';
+foreach ( (array) $tags as $tag ) {
+  $output .= '<li>#<a href="' . get_tag_link ($tag->term_id) . '" rel="tag">' . $tag->name . '</a></li>';
+};
+$output .= '</ul>';
+
+}
+
+  return $output;
+}
