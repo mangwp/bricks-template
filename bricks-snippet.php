@@ -12,6 +12,7 @@ function wpb_set_post_views($postID) {
       update_post_meta($postID, $count_key, $count);
   }
 }
+
 //To keep the count accurate, lets get rid of prefetching
 remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
 function wpb_track_post_views ($post_id) {
@@ -23,11 +24,12 @@ function wpb_track_post_views ($post_id) {
   wpb_set_post_views($post_id);
 }
 add_action( 'wp_head', 'wpb_track_post_views');
+
+//enable custom field wordpress when acf installed//
 add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
 //Disable Gutenberg//
 add_filter('use_block_editor_for_post', '__return_false', 10);
-
 
 // Show post tags with link and a custom separator// use {echo:wpdocs_show_tags}
 function wpdocs_show_tags()
