@@ -1,4 +1,4 @@
-
+<?php
 // Create and value to customfield each page visited by user (Most View)//
 function wpb_set_post_views($postID) {
   $count_key = 'wpb_post_views_count';
