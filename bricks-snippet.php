@@ -109,3 +109,127 @@ $output .= '</ul>';
 
   return $output;
 }
+
+
+// Retrieve YT THumbnail and Set it as Featured Imaeg//
+
+function generate_video_thumbnail($post_id, $post) {
+	$current_post_thumbnail = get_post_thumbnail_id( $post_id );
+    if ( 0 !== $current_post_thumbnail ) {
+        return;
+    }
+	
+	$url = get_field('url_youtube', $post_id, false);
+	$oembed = _wp_oembed_get_object();
+	$provider = $oembed->get_provider($url);
+	$oembed_data = $oembed->fetch( $provider, $url );
+	$thumbnail = $oembed_data->thumbnail_url;
+	$title = get_the_title($post_id);
+	
+	if($url) {
+		$image = media_sideload_image( $thumbnail, $post_id, $title, 'id' );
+		set_post_thumbnail( $post_id, $image );
+	}
+}
+add_action('save_post', 'generate_video_thumbnail', 12, 3);
+
+//Get ID Oembed ACF//
+
+function parse_video_uri( $url ) {
+		
+  // Parse the url 
+  $parse = parse_url( $url );
+  
+  // Set blank variables
+  $video_type = '';
+  $video_id = '';
+  
+  // Url is http://youtu.be/xxxx
+  if ( $parse['host'] == 'youtu.be' ) {
+  
+    $video_type = 'youtube';
+    
+    $video_id = ltrim( $parse['path'],'/' );	
+    
+  }
+  
+  // Url is http://www.youtube.com/watch?v=xxxx 
+  // or http://www.youtube.com/watch?feature=player_embedded&v=xxx
+  // or http://www.youtube.com/embed/xxxx
+  if ( ( $parse['host'] == 'youtube.com' ) || ( $parse['host'] == 'www.youtube.com' ) ) {
+  
+    $video_type = 'youtube';
+    
+    parse_str( $parse['query'] );
+    
+    $video_id = $v;	
+    
+    if ( !empty( $feature ) )
+      $video_id = end( explode( 'v=', $parse['query'] ) );
+      
+    if ( strpos( $parse['path'], 'embed' ) == 1 )
+      $video_id = end( explode( '/', $parse['path'] ) );
+    
+  }
+  
+  // Url is http://www.vimeo.com
+  if ( ( $parse['host'] == 'vimeo.com' ) || ( $parse['host'] == 'www.vimeo.com' ) ) {
+  
+    $video_type = 'vimeo';
+    
+    $video_id = ltrim( $parse['path'],'/' );	
+          
+  }
+  $host_names = explode(".", $parse['host'] );
+  $rebuild = ( ! empty( $host_names[1] ) ? $host_names[1] : '') . '.' . ( ! empty($host_names[2] ) ? $host_names[2] : '');
+  // Url is an oembed url wistia.com
+  if ( ( $rebuild == 'wistia.com' ) || ( $rebuild == 'wi.st.com' ) ) {
+  
+    $video_type = 'wistia';
+      
+    if ( strpos( $parse['path'], 'medias' ) == 1 )
+        $video_id = end( explode( '/', $parse['path'] ) );
+  
+  }
+  
+  // If recognised type return video array
+  if ( !empty( $video_type ) ) {
+  
+    $video_array = array(
+      'type' => $video_type,
+      'id' => $video_id
+    );
+  
+    return $video_array;
+    
+  } else {
+  
+    return false;
+    
+  }
+  
+}
+
+// Json Retrieve Duration by YT API key//
+
+function getDuration(){
+  $video = get_field( 'url_youtube', false, false );
+  $v = parse_video_uri( $video ); 
+  $vid = $v['id'];
+  $apikey = "yourapikey"; // Like this AIcvSyBsLA8znZn-i-aPLWFrsPOlWMkEyVaXAcv
+  $dur = file_get_contents("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=$vid&key=$apikey");
+  $VidDuration =json_decode($dur, true);
+  foreach ($VidDuration['items'] as $vidTime)
+  {
+      $VidDuration= $vidTime['contentDetails']['duration'];
+  }
+  preg_match_all('/(\d+)/',$VidDuration,$parts);
+  $hours = floor($parts[0][0]/60);
+$minutes = $parts[0][0]%60;
+$seconds = $parts[0][1];
+if($hours != 0)
+                return $hours.':'.$minutes.':'.$seconds;
+            else
+                return $minutes.':'.$seconds;
+
+}
