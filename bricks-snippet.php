@@ -233,3 +233,11 @@ if($hours != 0)
                 return $minutes.':'.$seconds;
 
 }
+
+
+
+//Get Total ACF Image Gallery ACF //
+function gettotalphotos() {
+$video = count(get_field( 'gallery' ));
+return $video;
+}
