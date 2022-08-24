@@ -241,3 +241,24 @@ function gettotalphotos() {
 $video = count(get_field( 'gallery' ));
 return $video;
 }
+
+//Remove Google FOnt From Google Map (Need Google Map api)
+var head = document.getElementsByTagName('head')[0];
+var insertBefore = head.insertBefore;
+head.insertBefore = function(newElement, referenceElement) {
+  if (newElement.href && newElement.href.indexOf('https://fonts.googleapis.com/css?family') === 0) {
+    console.info('Prevented Google Font from loading!');
+    return;
+  }
+  insertBefore.call(head, newElement, referenceElement);
+};
+ function initMap() {
+  var map = new google.maps.Map(document.getElementById("map"), {
+     center: { lat: -34.397, lng: 150.644 },
+     zoom: 8,
+   });
+ }
+ window.initMap = initMap;
+
+/////
+ 
