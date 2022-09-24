@@ -1,0 +1,23 @@
+// Custom SVG icon inside ul list tag //
+
+.text-with-list ul {
+  padding: 0;
+}
+.text-with-list ul li {
+  list-style: none;
+  padding-left: 2rem;
+  position: relative;
+}
+.text-with-list ul li:before {
+  content: '';
+  -webkit-mask: url(/wp-content/uploads/2022/09/circle-check-regular.svg) no-repeat;
+  mask: url(/wp-content/uploads/2022/09/circle-check-regular.svg) no-repeat;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  position: absolute;
+  left: 0;
+  background-color: #ffd64f;
+  width: 1.2rem;
+  height: 1.2rem;
+  top: 0.8rem;
+}
