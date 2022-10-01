@@ -262,3 +262,6 @@ head.insertBefore = function(newElement, referenceElement) {
 
 /////
  
+add_filter( 'bricks/dynamic_data/post_terms_links', function( $has_links, $post, $taxonomy) {
+  return $taxonomy !== 'desa'; 
+}, 10, 3);
