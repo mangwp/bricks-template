@@ -1,4 +1,36 @@
 <?php
+// Create shotcode for menu
+function main_menu_code()
+{
+    $options = array(
+        'echo' => false,
+        'container' => 'nav',
+        'container_class' => 'main-menu',
+        'theme_location' => 'main',
+        'menu_class'           => 'main-menu__list',
+		'fallback_cb'     => 'Main_Navwalker::fallback',
+		'walker'          => new Main_Navwalker(),
+    );
+
+    $menu = wp_nav_menu($options);
+    return $menu;
+}
+
+//Create theme location 
+function register_my_menus()
+{
+    $locations = array(
+        'top' => __('Top Menu', 'bricks-child'),
+        'main' => __('Main Menu', 'bricks-child'),
+    );
+    register_nav_menus($locations);
+}
+add_action('init', 'register_my_menus');
+
+// Including file 
+require_once __DIR__ . '/includes/menu/main-menu-walker.php';
+
+
 // Create and value to customfield each page visited by user (Most View)//
 function wpb_set_post_views($postID) {
   $count_key = 'wpb_post_views_count';
