@@ -1,4 +1,18 @@
 <?php
+// Tested get post count from term_id https://www.youtube.com/watch?v=eY4J1YFWrGM//
+function get_post_count_term_id($term)
+{
+    $term_by_id = get_term( $term );
+    return $term_by_id->count;
+}
+
+// Tested get post count from post_type https://www.youtube.com/watch?v=eY4J1YFWrGM //
+function get_post_count_post_type($cpt) {
+return wp_count_posts($cpt)->publish;
+}
+
+
+
 // Create shotcode for menu
 function main_menu_code()
 {
